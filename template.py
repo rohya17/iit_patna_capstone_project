@@ -25,13 +25,13 @@ FILES = [
     "requirements.txt",
     "config.toml",
     "main.py",
-    "smoke-test.py"
+    "smoke-test.py",
 
     # Source
     "src/__init__.py",
     "src/config.py",
     "src/logger.py",
-    "src/cost_tracker.py"
+    "src/cost_tracker.py",
 
     # Document Processing
     "src/document_processor.py",
