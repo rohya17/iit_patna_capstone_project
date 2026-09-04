@@ -43,4 +43,37 @@ def test_complaint_schema_extraction():
 
     return response["content"].model_dump()
     
-test_complaint_schema_extraction()
+# test_complaint_schema_extraction()
+
+# ----------------------------------------------------
+
+from src.schemas.email_schema import EmailDetails
+
+def test_email_body_gen():
+
+    with open("prompts/email_system_prompt.txt", "r", encoding="utf-8") as file:
+        email_system_prompt = file.read()
+
+    with open("prompts/customer_email_prompt.txt", "r", encoding="utf-8") as file:
+        email_extraction_prompt = file.read()
+
+    # parsing compaint
+    complaint = test_complaint_schema_extraction()
+    
+    # creating email
+    email_prompt = email_extraction_prompt.format(customer_complaint = complaint)
+
+    email_result = llm.chat_completion(user_prompt = email_prompt,
+                                 system_prompt=email_system_prompt, 
+                                 response_schema = EmailDetails)
+    if(email_result['success']):
+        print(email_result["content"].model_dump())
+    else:
+        print(email_result)
+
+    email = email_result["content"].model_dump()
+
+    return email['subject'], email['body'], complaint['customer_email']
+
+test_email_body_gen()  
+
