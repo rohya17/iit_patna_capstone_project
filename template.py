@@ -41,6 +41,7 @@ FILES = [
 
     # Utilities
     "src/utils.py",
+    "src/tools/email.py"
 
     # Schemas
     "src/schemas/__init__.py",

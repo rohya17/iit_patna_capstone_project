@@ -39,3 +39,12 @@ log_file = "logs/project.log"
 document_input = "data/input"
 document_processed = "data/processed"
 document_output = "data/output"
+
+# Email Configuration
+[email]
+enabled = true
+smtp_host = "smtp.gmail.com"
+smtp_port = 587
+use_tls = true
+from_email = "hrm.rohit17@gmail.com"
+from_name = "Service Team"

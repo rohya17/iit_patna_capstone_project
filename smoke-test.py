@@ -75,5 +75,21 @@ def test_email_body_gen():
 
     return email['subject'], email['body'], complaint['customer_email']
 
-test_email_body_gen()  
+# test_email_body_gen()  
 
+#---------------------------------------------------------------------
+
+from src.tools.email import send_email
+
+def test_sending_email():
+
+    subject,body,email_address = test_email_body_gen()
+
+    sent = send_email(subject=subject, body= body, email_address=email_address)
+
+    if(sent):
+        print(f"E-Mail sent successfully to {email_address}" )
+    else:
+        print( f"Failed to send email to {email_address}")
+
+test_sending_email()
