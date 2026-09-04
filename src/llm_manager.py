@@ -84,48 +84,57 @@ class LLMManager:
 
     def get_structured_output(self, response_schema, messages):
 
-        if response_schema:
-        
-            response = self.client.responses.parse(
-                model=config.MODELS["document_model"],
-                input=messages,
-                text_format=response_schema,
+        try:
+            if response_schema:
+                    
+                response = self.client.responses.parse(
+                    model=config.MODELS["document_model"],
+                    input=messages,
+                    text_format=response_schema,
+                )
+
+                content = response.output_parsed
+
+            else:
+
+                response = self.client.responses.create(
+                    model=config.MODELS["document_model"],
+                    input=messages,
+                    temperature=config.MODELS["temperature"],
+                    max_output_tokens=config.MODELS["max_tokens"],
+                )
+
+                content = response.output_text
+
+            logger.info("Text completion request completed.")
+
+            usage = response.usage
+
+            cost = cost_tracker.calculate_cost(
+                input_tokens=usage.input_tokens,
+                output_tokens=usage.output_tokens
             )
 
-            content = response.output_parsed
-
-        else:
-
-            response = self.client.responses.create(
-                model=config.MODELS["document_model"],
-                input=messages,
-                temperature=config.MODELS["temperature"],
-                max_output_tokens=config.MODELS["max_tokens"],
+            logger.info(
+                f"Model={config.MODELS['document_model']} | "
+                f"Input Tokens={cost['input_tokens']} | "
+                f"Output Tokens={cost['output_tokens']} | "
+                f"Total cost={cost['current_total_cost']} {cost['currency']} | "
             )
 
-            content = response.output_text
-
-        logger.info("Text completion request completed.")
-
-        usage = response.usage
-
-        cost = cost_tracker.calculate_cost(
-            input_tokens=usage.input_tokens,
-            output_tokens=usage.output_tokens
-        )
-
-        logger.info(
-            f"Model={config.MODELS['document_model']} | "
-            f"Input Tokens={cost['input_tokens']} | "
-            f"Output Tokens={cost['output_tokens']} | "
-            f"Total cost={cost['current_total_cost']} {cost['currency']} | "
-        )
-
-        return {
-            "success": True,
-            "content": content,
-            "usage": cost,
-            "model": config.MODELS["document_model"],
-        }
+            return {
+                "success": True,
+                "content": content,
+                "usage": cost,
+                "model": config.MODELS["document_model"],
+            }
+        except Exception as e:
+            logger.error(f"Failed with error : {e}")
+            return {
+                "success": False,
+                "content": f"Failed {e}" ,
+                "usage": None,
+                "model": config.MODELS["document_model"],
+            }
 
 llm = LLMManager()
