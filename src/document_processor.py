@@ -1,5 +1,6 @@
 from tqdm.auto import tqdm
 from src.llm_manager import llm
+from src.logger import logger
 
 def process_documents(complaints_doc_df, extraction_prompt, system_prompt, response_format, default_response):
 
@@ -23,6 +24,7 @@ def process_documents(complaints_doc_df, extraction_prompt, system_prompt, respo
                 complaints_doc_df.loc[index,"parse_status"] = "Failed"
 
         except Exception as e:
+            logger.error(f"Document Processor > Process Document > Failed : {e}")
             results.append(default_response)
             complaints_doc_df.loc[index,"parse_status"] = f"Failed : {e}"
 

@@ -1,0 +1,5 @@
+Write a internal case summary for customer complaint.
+Return only the structured response.
+customer case: {customer_case}
+email sent: {email_sent}
+email content: {email_content}

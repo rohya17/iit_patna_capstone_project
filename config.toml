@@ -37,8 +37,9 @@ log_file = "logs/project.log"
 # Paths
 [paths]
 document_input = "data/input"
-structured_data_dir = "data/structured_data"
-email_data_dir = "data/customer_emails"
+structured_data_dir = "data/output/structured_data"
+email_data_dir = "data/output/customer_emails"
+summary_data_dir = "data/output/case_summaries"
 final_output = "data/output"
 
 # Email Configuration

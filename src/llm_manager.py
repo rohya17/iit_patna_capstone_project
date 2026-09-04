@@ -21,6 +21,8 @@ class LLMManager:
         """
         Performs document details extraction
         """
+        # Ensure file_path is a Path object (handles both str and Path inputs)
+        file_path = Path(file_path)
 
         uploaded_file = self.client.files.create(
             file=file_path,
@@ -58,7 +60,7 @@ class LLMManager:
 
     def chat_completion(
         self,
-        user_prompt: str,
+        user_prompt,
         system_prompt: str,
         response_schema=None,
     ):
