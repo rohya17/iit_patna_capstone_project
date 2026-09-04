@@ -3,6 +3,7 @@ from pathlib import Path
 from tqdm.auto import tqdm
 
 import sys
+import shutil
 import warnings
 import pandas as pd
 
@@ -249,6 +250,20 @@ def generate_customer_complaint_summary(result_df, case_summary_prompt, summary_
     return result_df
 
 def save_final_report(report_df):
+
+    for index, row in tqdm(report_df.iterrows(), total=len(report_df), desc="Saving final report..."):
+
+        try:
+            if (row['email_sent']):
+                current_path = str(row['file_path'])
+                source = Path(current_path)
+                destination = Path(current_path.replace("input", "input/processed"))
+                report_df.loc[index,"file_path"] = current_path.replace("input", "input/processed")
+
+            shutil.move(source, destination)
+
+        except Exception as e:
+            logger.error(f"Pipeline > save_final_report > Failed : {e}")
 
     output_file = OUTPUT_DATA_DIR / "final_report.csv"
     utils.save_dataframe(report_df, output_file)
